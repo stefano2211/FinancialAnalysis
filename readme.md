@@ -57,6 +57,15 @@ aura-core-ai-test/
 │   ├── api/                    # API Layer
 │   │   ├── endpoints/          # Route handlers (documents, search, system)
 │   │   └── router.py           # Main API router configuration
+│   ├── agent/                  # Agentic AI Layer
+│   │   ├── finance/            # Finance Subgraph
+│   │   │   ├── graph.py        # Subgraph definition
+│   │   │   ├── nodes.py        # Subgraph nodes (LLM, Tools)
+│   │   │   └── state.py        # Subgraph state definition
+│   │   ├── nodes.py            # Main agent nodes
+│   │   ├── state.py            # Main agent state
+│   │   ├── tools.py            # Agent tools (RAG, Finance)
+│   │   └── workflow.py         # Main agent workflow definition
 │   ├── core/                   # Core infrastructure
 │   │   ├── config.py           # Environment configuration (Pydantic settings)
 │   │   └── vector_store.py     # Qdrant client wrapper
