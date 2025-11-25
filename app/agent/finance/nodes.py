@@ -23,7 +23,11 @@ def finance_agent(state: FinanceState):
         return {"messages": [ToolMessage(content="Error: No messages provided.", tool_call_id="unknown")]}
     
     # Simple prompt to extract ticker
-    system_prompt = SystemMessage(content="You are a financial assistant. Extract the stock ticker symbol from the user's query. Return ONLY the ticker symbol (e.g., AAPL, MSFT). If no ticker is found, return 'NONE'.")
+    system_prompt = SystemMessage(content="""You are a specialized financial data retrieval assistant. Your ONLY goal is to identify the correct stock ticker symbol from the user's query so that data can be fetched. 
+
+Do not attempt to analyze the stock or provide financial advice. The analysis will be handled by the main orchestrator. 
+
+Return ONLY the ticker symbol (e.g., AAPL, MSFT). If no ticker is found, return 'NONE'.""")
     
     response = llm.invoke([system_prompt] + messages)
     ticker = response.content.strip().upper()

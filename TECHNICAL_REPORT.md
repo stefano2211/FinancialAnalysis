@@ -13,6 +13,13 @@ graph TD
         API -->|Upload| MinIO[MinIO Object Storage]
         API -->|Search/RAG| Qdrant[Qdrant Vector Store]
         API -->|Async Task| Redis[Redis Broker]
+        API -->|Agent| LangGraph[LangGraph Agent]
+    end
+    
+    subgraph "Agent Layer"
+        LangGraph -->|Retrieve| Qdrant
+        LangGraph -->|Finance| YFinance[yfinance API]
+        LangGraph -->|LLM| OpenRouter[OpenRouter/LLM]
     end
     
     subgraph "Worker Layer"
@@ -145,6 +152,19 @@ The API is organized into three main modules:
     - `entity_filter`: Filter by presence of specific entities (e.g., "money").
     - `category_filter`: Filter by document type (e.g., "contract").
 - **POST `/chat`**: RAG (Retrieval-Augmented Generation) endpoint. Accepts a natural language question, retrieves relevant context from Qdrant, and generates an answer using the LLM (OpenRouter).
+
+### 2.3 Finance Agent (Subgraph)
+The system includes a specialized **Finance Agent** integrated into the main LangGraph workflow.
+
+- **Functionality:**
+    - **Natural Language Processing:** Uses an LLM node to analyze user queries and extract stock ticker symbols (e.g., "AAPL" from "What is the price of Apple?").
+    - **Data Retrieval:** Fetches real-time stock market data (price, market cap, currency, etc.) using the `yfinance` library.
+    - **Integration:** Acts as a tool within the main agent, allowing the orchestrator to dynamically switch between document retrieval (RAG) and external financial data based on the user's intent.
+
+- **Technologies:**
+    - **LangGraph:** For orchestrating the stateful agent workflow and subgraphs.
+    - **yfinance:** For accessing open stock market data.
+    - **OpenRouter/OpenAI:** For the LLM reasoning capabilities.
 
 ### 2.3 System (`/health`)
 - **GET `/health`**: Simple health check to verify the API is running and responsive.
