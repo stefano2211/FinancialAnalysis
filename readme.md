@@ -231,3 +231,24 @@ The document processing flow is designed to be robust and asynchronous:
 ### 5.2 Database Scaling
 - **Qdrant:** Supports distributed deployment with sharding. As the vector index grows, we can add more Qdrant nodes.
 - **MinIO/S3:** Object storage is inherently scalable for massive amounts of document data.
+
+## 6. CI/CD & Deployment
+
+The project includes a GitHub Actions workflow for automated deployment to AWS EC2.
+
+### 6.1 Prerequisites
+- An AWS EC2 instance (Ubuntu recommended) with Docker and Docker Compose installed.
+- Ports 80 (HTTP) and 22 (SSH) open in the Security Group.
+
+### 6.2 Setup
+1.  **Secrets:** Configure the following secrets in your GitHub Repository:
+    - `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`
+    - `ENV_FILE` (Copy content of your production .env)
+    - `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `QDRANT_URL`, etc.
+2.  **Deployment:** Push to `main` branch to trigger the build and deployment pipeline.
+
+### 6.3 Architecture
+- **Nginx:** Acts as the entry point (Reverse Proxy) on port 80.
+- **GHCR:** Docker images are built and stored in GitHub Container Registry.
+- **Watchtower (Optional):** Can be added to auto-update images, but currently the CI pipeline handles updates via `docker compose up -d`.
+
